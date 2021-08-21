@@ -13,12 +13,3 @@ SELECT
     END AS century
 FROM
     years
-    
-    
--- Clever solutions:
-
-SELECT 
-    CEILING(yr / 100.00) AS Century
-FROM
-    years
-
