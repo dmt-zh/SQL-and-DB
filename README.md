@@ -6,3 +6,6 @@
 
 #### MySQL:
 * [Interactive SQL Trainer](https://stepik.org/course/86043/info)    -    In progress
+
+#### PostgreSQL:
+* [Solving katas on codewars](https://codewars.com/users/dmts)
