@@ -5,7 +5,7 @@
 * [Databases](https://stepik.org/course/2614/info)    -    Without certificate
 
 #### MySQL:
-* [Interactive SQL Trainer](https://stepik.org/course/86043/info)    -    In progress
+* [Interactive SQL Trainer](https://stepik.org/course/86043/info)    -    [Certificate](https://stepik.org/cert/1181103)
 
 #### PostgreSQL:
 * [Solving katas on codewars](https://codewars.com/users/dmts)
