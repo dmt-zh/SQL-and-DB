@@ -8,4 +8,5 @@
 * [Interactive SQL Trainer](https://stepik.org/course/86043/info)    -    [Certificate](https://stepik.org/cert/1181103)
 
 #### PostgreSQL:
+* [SQL Window Functions](https://stepik.org/course/95367/info)    -    [Certificate](https://stepik.org/cert/1503316)
 * [Solving katas on codewars](https://codewars.com/users/dmts)
