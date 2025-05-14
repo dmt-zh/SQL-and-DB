@@ -41,7 +41,7 @@
 
 ## Проект базы данных
 
-Ссылка на [ER-диаграмму](https://github.com/dmt-zh/SQL-and-DB/blob/main/televeterinary-project.jpg)
+<img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/televeterinary_db/televeterinary-project.jpg"/>
 
 **Таблицы**:
 - `user` — базовая таблица со всеми пользователями
