@@ -68,13 +68,22 @@
 -  `experience` — общий стаж в профессии
 ---
 
-### Таблица фактов/измерений по Кимбаллу
+### Задачи анализа
+
+Будем анализировать платежи и услуги:
+- платежи — какие тарифы покупают, и какие используют промокоды; какие клиенты делают платежи
+- услуги — какие типы услуг оказываются, каким питомцам и какими ветеринарами
+
+<hr>
+<br>
+
+## Таблица фактов/измерений по Кимбаллу
 <img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/db_design/dwh/fact_dim.jpg"/>
 
----
-### Data Vault
+
+## Data Vault
 <img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/db_design/dwh/data_valt.jpg"/>
 
----
-### Anchor Modeling
+
+## Anchor Modeling
 <img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/db_design/dwh/ancor_model.jpg"/>
