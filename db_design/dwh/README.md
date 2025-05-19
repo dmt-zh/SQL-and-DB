@@ -69,11 +69,12 @@
 ---
 
 ### Таблица фактов/измерений по Кимбаллу
-
+<img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/db_design/dwh/fact_dim.jpg"/>
 
 ---
 ### Data Vault
-
+<img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/db_design/dwh/data_valt.jpg"/>
 
 ---
 ### Anchor Modeling
+<img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/db_design/dwh/ancor_model.jpg"/>
