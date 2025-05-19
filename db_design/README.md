@@ -1,4 +1,4 @@
-### [Проектирование БД для системы телеветеринарии]((https://github.com/dmt-zh/SQL-and-DB/tree/main/db_design/televeterinary_db)
+### [Проектирование БД для системы телеветеринарии](https://github.com/dmt-zh/SQL-and-DB/tree/main/db_design/televeterinary_db)
 
 Система позволяет пользователям (клиентам компании) коммуницировать с профессиональными ветеринарами (сотрудниками компании телеветеринарии)
 
