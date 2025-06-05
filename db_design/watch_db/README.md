@@ -30,4 +30,4 @@
 
 ## Схема проекта базы данных
 
-<img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/watch.db.jpg"/>
+<img src="https://github.com/dmt-zh/SQL-and-DB/blob/main/db_design/watch_db/watch.db.jpg"/>
