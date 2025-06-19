@@ -326,7 +326,7 @@ create table product (
 	product_id bigint generated always as identity primary key,
 	article varchar(150),
 	name varchar(300) not null check (length(name) >= 4),
-	price numeric check (price > 0 or price is null) default null
+	price numeric check (price > 0 or price is not null)
 );
 
 insert into product (
@@ -960,43 +960,21 @@ comment on column accessory_to_category.category_id is 'Внешний ключ 
 
 --###########################################################################
 
-create table md_delivery_type (
-	md_delivery_type_id smallint generated always as identity primary key,
-	delivery_name varchar(300) not null,
-	delivery_description text,
-	delivery_cost numeric check (delivery_cost >= 0) default 0
-);
-
-insert into md_delivery_type (delivery_name, delivery_description, delivery_cost) values 
-	('boxberry', 'Доставка до пункта самовывоза', 0),
-	('Почта россии', 'Доставка почтой России', 0),
-	('Курьер', 'Курьерская доставка по Москве', 199);
-
-comment on table md_delivery_type is 'Доступные типы доставки';
-comment on column md_delivery_type.md_delivery_type_id is 'Уникальный идентификатор доставки';
-comment on column md_delivery_type.delivery_name is 'Наименование доставки';
-comment on column md_delivery_type.delivery_description is 'Описание сервиса доставки';
-comment on column md_delivery_type.delivery_cost is 'Стоимость доставки';
-
---###########################################################################
-
 create table cart (
 	cart_id bigint generated always as identity primary key,
-	md_delivery_type_id smallint references md_delivery_type(md_delivery_type_id),
 	user_cookies_hash varchar(64) not null check (length(user_cookies_hash) = 64)
 );
 
-insert into cart (md_delivery_type_id, user_cookies_hash) values
-	(2, 'aec070645fe53ee3b3763059376134f058cc337247c978add178b6ccdfb0019f'),
-	(3, 'c37c22345e53ce1c1a0cbb435a4fe761d1dbd4c15c795dc68c4ec174f1fa3ced'),
-	(1, 'ffd93a5ddb3946d6af361d333a53e0c109df688da98a07d7765d81d4eeb16f33'),
-	(null, '861653ae6d0609fe8008546a690430cb07ab3dd7e1b0f6b4bcf852375fa414fc'),
-	(null, '1b3e3c016745d4fce631eaa0316123dae881a65a8ea860437039ad9a9041cd82'),
-	(null, '3f8a1a559a879567b62112756a619a91b1b08bd1de558fb66550b70a6a23955d');
+insert into cart (user_cookies_hash) values
+	('aec070645fe53ee3b3763059376134f058cc337247c978add178b6ccdfb0019f'),
+	('c37c22345e53ce1c1a0cbb435a4fe761d1dbd4c15c795dc68c4ec174f1fa3ced'),
+	('ffd93a5ddb3946d6af361d333a53e0c109df688da98a07d7765d81d4eeb16f33'),
+	('861653ae6d0609fe8008546a690430cb07ab3dd7e1b0f6b4bcf852375fa414fc'),
+	('1b3e3c016745d4fce631eaa0316123dae881a65a8ea860437039ad9a9041cd82'),
+	('3f8a1a559a879567b62112756a619a91b1b08bd1de558fb66550b70a6a23955d');
 
 comment on table cart is 'Корзина покупателя';
 comment on column cart.cart_id is 'Уникальный идентификатор корзины';
-comment on column cart.md_delivery_type_id is 'Внешний ключ на идентификатор тип доставки';
 comment on column cart.user_cookies_hash is 'Хэш куки пользователя';
 
 --###########################################################################
@@ -1006,7 +984,7 @@ create table product_to_cart (
 	cart_id bigint not null references cart(cart_id),
 	quantity smallint not null check(quantity > 0) default 1,
 	created_at_dtm timestamp not null default current_timestamp,
-	price numeric check (price > 0),
+	price numeric check (price > 0 or price is not null),
 	primary key (product_id, cart_id)
 );
 
@@ -1027,6 +1005,26 @@ comment on column product_to_cart.cart_id is 'Внешний ключ на ид�
 comment on column product_to_cart.quantity is 'Количество заказываемых единиц товара';
 comment on column product_to_cart.created_at_dtm is 'Дата и время добавления товара в корзину';
 comment on column product_to_cart.price is 'Стоимость товара на момент заказа';
+
+--###########################################################################
+
+create table md_delivery_type (
+	md_delivery_type_id smallint generated always as identity primary key,
+	delivery_name varchar(300) not null,
+	delivery_description text,
+	delivery_cost numeric check (delivery_cost >= 0) default 0
+);
+
+insert into md_delivery_type (delivery_name, delivery_description, delivery_cost) values 
+	('boxberry', 'Доставка до пункта самовывоза', 0),
+	('Почта россии', 'Доставка почтой России', 0),
+	('Курьер', 'Курьерская доставка по Москве', 199);
+
+comment on table md_delivery_type is 'Доступные типы доставки';
+comment on column md_delivery_type.md_delivery_type_id is 'Уникальный идентификатор доставки';
+comment on column md_delivery_type.delivery_name is 'Наименование доставки';
+comment on column md_delivery_type.delivery_description is 'Описание сервиса доставки';
+comment on column md_delivery_type.delivery_cost is 'Стоимость доставки';
 
 --###########################################################################
 
@@ -1054,6 +1052,7 @@ comment on column md_order_status.status_description is 'Описание ста
 create table "order" (
 	order_id bigint generated always as identity primary key,
 	cart_id bigint references cart(cart_id),
+	md_delivery_type_id smallint references md_delivery_type(md_delivery_type_id),
 	created_at_dtm timestamp not null default current_timestamp,
 	first_name varchar(50) not null check (length(first_name) >= 2),
 	last_name varchar(50),
@@ -1065,10 +1064,11 @@ create table "order" (
 );
 
 insert into "order" (
-	cart_id, created_at_dtm, first_name, last_name, address, phone,
+	cart_id, md_delivery_type_id, created_at_dtm, first_name, last_name, address, phone,
 	email, comment, total_price) values
 	(
 		1, --cart_id
+		2,
 		'2025-04-10'::timestamp, --created_at_dtm
 		'Гордей', --first_name
 		null,
@@ -1080,6 +1080,7 @@ insert into "order" (
 	),
 	(
 		2,
+		3,
 		'2025-04-12'::timestamp,
 		'Анна',
 		null,
@@ -1091,6 +1092,7 @@ insert into "order" (
 	),
 	(
         3,
+        1,
         '2025-04-15'::timestamp,
         'Коля',
         null,
@@ -1099,11 +1101,24 @@ insert into "order" (
         null,
         null,
         9990
+    ),
+	(
+        null,
+        1,
+        '2025-06-15'::timestamp,
+        'Жэка',
+        null,
+        'Питер',
+        '+74912245077',
+        null,
+        null,
+        9990
     );
 
 comment on table "order" is 'Таблица с заказами клиентов';
 comment on column "order".order_id is 'Уникальный идентификатор заказа клиента';
 comment on column "order".cart_id is 'Внешний ключ на идентификатор корзины';
+comment on column "order".md_delivery_type_id is 'Внешний ключ на идентификатор типа доставки';
 comment on column "order".created_at_dtm is 'Дата создания заказа клиентом';
 comment on column "order".first_name is 'Имя покупателя';
 comment on column "order".last_name is 'Фамилия покупателя';
@@ -1116,6 +1131,7 @@ comment on column "order".total_price is 'Общая сумма по заказ�
 --###########################################################################
 
 create table order_status_log (
+	order_status_log_id bigint generated always as identity primary key,
 	order_id bigint references "order"(order_id),
 	updated_at_dtm timestamp not null default current_timestamp,
 	md_order_status_id smallint not null references md_order_status(md_order_status_id) default 5
@@ -1130,6 +1146,7 @@ insert into order_status_log (order_id, updated_at_dtm, md_order_status_id) valu
 	(2, '2025-04-17'::timestamp, 4);
 
 comment on table order_status_log is 'Таблица с историей изменений статусов по заказам';
+comment on column order_status_log.order_status_log_id is 'Уникальный идентификатор лога заказа';
 comment on column order_status_log.order_id is 'Внешний ключ на идентификатор заказа';
 comment on column order_status_log.updated_at_dtm is 'Дата изменения статуса заказа';
 comment on column order_status_log.md_order_status_id is 'Внешний ключ на идентификатор статуса заказа';
