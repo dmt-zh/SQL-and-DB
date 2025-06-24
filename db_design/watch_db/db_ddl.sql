@@ -31,8 +31,8 @@ create table static_page (
 	static_page_id smallint generated always as identity primary key,
 	title varchar(50) not null,
 	content text,
-	created_at_dtm timestamp default current_timestamp,
-	updated_at_dtm timestamp default current_timestamp,
+	created_at_dtm timestamp default current_timestamp not null,
+	updated_at_dtm timestamp default current_timestamp not null,
 	is_draft bool not null default false,
 	url varchar(200)
 );
@@ -326,100 +326,120 @@ create table product (
 	product_id bigint generated always as identity primary key,
 	article varchar(150),
 	name varchar(300) not null check (length(name) >= 4),
-	price numeric check (price > 0 or price is not null)
+	price numeric not null check (price > 0),
+	available_quantity int not null check (available_quantity >= 0)
 );
 
 insert into product (
-	article, name, price) values 
+	article, name, price, available_quantity) values 
 	(
 		'71950281',
 		'Часы Луч "Однострелочник Ретро"', --name, https://luch-watches.com/muzhskie-chasy/1145-model-77471760.html
-		14990 --price
+		14990, --price
+		21 --available_quantity
 	),
 	(
 		'571950763',
 		'Часы Луч', --name, https://luch-watches.com/muzhskie-chasy/1134-chasy-luch-377477761.html
-		12990 --price
+		12990, --price
+		14 --available_quantity
+
 	),
 	(
 		'72087604',
 		'Часы Луч "Галактика"', --name, https://luch-watches.com/home/1236-chasy-luch-272081646.html
-		10990 --price
+		10990, --price
+		19 --available_quantity
 	),
 	(
 		'78447326',
 		'Часы Луч', --name, https://luch-watches.com/muzhskie-chasy/1084-chasy-luch-78447326.html
-		9990 --price
+		9990, --price
+		22 --available_quantity
 	),
 	(
 		'740280594',
 		'Часы Луч', --name, https://luch-watches.com/home/979-chasy-luch-740280594.html
-		23990 --price
+		23990, --price
+		15 --available_quantity
 	),
 	(
 		'71657550',
 		'Часы Луч', --name, https://luch-watches.com/home/1182-chasy-luch-71650809.html
-		14490 --price
+		14490, --price
+		23 --available_quantity
 	),
 	(
 		'38991188',
 		'Часы Луч', --name, https://luch-watches.com/arkhivnye-serii/87-model-38991188.html
-		4100 --price
+		4100, --price
+		0 --available_quantity
 	),	
 	(
 		'75231288',
 		'Часы луч', --name, https://luch-watches.com/nyud/650-model-375231288.htmll
-		9990 --price
+		9990, --price
+		15 --available_quantity
 	),
 	(
 		'9319162',
 		'Часы Луч', --name, https://luch-watches.com/zhenskie-chasy/1115-chasy-luch-8319631.html
-		7490 --price
+		7490, --price
+		14 --available_quantity
 	),	
 	(
 		'78557506',
 		'Часы Луч TEMPER', --name, https://luch-watches.com/temper/1102-chasy-luch-temper-378558507.html
-		10490 --price
+		10490, --price
+		27 --available_quantity
 	),	
 	(
 		'8329632',
 		'Часы луч', --name, https://luch-watches.com/kamni/854-model-8329632.html
-		6990 --price
+		6990, --price
+		12 --available_quantity
 	),	
 	(
 		'71657716',
 		'Часы Луч', --name, https://luch-watches.com/kollekciya-raspisnye-uzory/1203-chasy-luch-71650809.html
-		14590 --price
+		14590, --price
+		10 --available_quantity
 	),	
 	(
 		'73710355',
 		'Часы луч', --name, https://luch-watches.com/home/1066-chasy-luch-73711355.html
-		6990 --price
+		6990, --price
+		9 --available_quantity
 	),	
 	(
 		'2687656',
 		'Будильник Луч', --name, https://luch-watches.com/nastolnye-chasy/1177-chasy-luch-429807464.html
-		1690 --price
+		1690, --price
+		14 --available_quantity
 	),
 	(
 		'5552032', --id 15
 		'Ремень Луч', --name, https://luch-watches.com/home/1218-remen-luch-chyornyj-20mm.html
-		2500 --price
+		2500, --price
+		18 --available_quantity
 	),
 	(
 		'5552033', --id 16
 		'Ремень Луч', --name, https://luch-watches.com/home/1046-remen-luch-chyornyj-20mm.html
-		2000 --price
+		2000, --price
+		25 --available_quantity
 	),
 	(
 		'8881803', --id 17
 		'Браслет для часов Луч', --name, https://luch-watches.com/remni-dlya-chasov-luch/1226-braslet-dlya-chasov-luch-888201.html
-		1500 --price
+		1500, --price
+		17 --available_quantity
 	),
 	(
 		null, --id 18
 		'Черный ремень 20мм нейлон', --name, https://luch-watches.com/home/1036-chernyj-remen-20mm-nejlon.html
-		1200 --price
+		1200, --price
+		0 --available_quantity
 	);
 
 comment on table product is 'Базовая таблица товаров';
@@ -427,6 +447,7 @@ comment on column product.product_id is 'Уникальный идентифик
 comment on column product.article is 'Артикул товара';
 comment on column product.name is 'Название товара';
 comment on column product.price is 'Стоимость товара с НДС';
+comment on column product.available_quantity is 'Доступное количество товара на складе';
 
 --###########################################################################
 
@@ -445,7 +466,7 @@ create table watch (
 	waterproof bool not null default false,
 	precious_metals bool not null default false,
 	icon_link varchar(300),
-	body_diameter numeric check (body_diameter > 0 or body_diameter is null) default null,
+	body_diameter numeric check (body_diameter > 0) default null,
 	in_stock bool not null default false
 );
 
@@ -729,7 +750,7 @@ comment on column watch.in_stock is 'Наличие часов на складе
 create table photo_link (
 	photo_link_id bigint generated always as identity primary key,
 	product_id bigint not null references product(product_id),
-	link varchar(300)
+	link varchar(300) not null
 );
 
 insert into photo_link (product_id, link) values 
@@ -846,7 +867,7 @@ comment on column watch_description.video_link is 'Ссылка на видео�
 
 create table watch_to_category (
 	product_id bigint not null references watch(product_id),
-	category_id bigint not null references category(category_id),
+	category_id smallint not null references category(category_id),
 	primary key (product_id, category_id)
 );
 
@@ -944,7 +965,7 @@ comment on column accessory_description.description is 'Описание рем�
 
 create table accessory_to_category (
 	product_id bigint references accessory(product_id),
-	category_id bigint references category(category_id),
+	category_id smallint references category(category_id),
 	primary key (product_id, category_id)
 );
 
@@ -962,7 +983,7 @@ comment on column accessory_to_category.category_id is 'Внешний ключ 
 
 create table cart (
 	cart_id bigint generated always as identity primary key,
-	user_cookies_hash varchar(64) not null check (length(user_cookies_hash) = 64)
+	user_cookies_hash varchar(64) not null check(length(user_cookies_hash) = 64)
 );
 
 insert into cart (user_cookies_hash) values
@@ -984,7 +1005,7 @@ create table product_to_cart (
 	cart_id bigint not null references cart(cart_id),
 	quantity smallint not null check(quantity > 0) default 1,
 	created_at_dtm timestamp not null default current_timestamp,
-	price numeric check (price > 0 or price is not null),
+	price numeric not null check (price > 0),
 	primary key (product_id, cart_id)
 );
 
@@ -1012,7 +1033,7 @@ create table md_delivery_type (
 	md_delivery_type_id smallint generated always as identity primary key,
 	delivery_name varchar(300) not null,
 	delivery_description text,
-	delivery_cost numeric check (delivery_cost >= 0) default 0
+	delivery_cost numeric not null check (delivery_cost >= 0) default 0
 );
 
 insert into md_delivery_type (delivery_name, delivery_description, delivery_cost) values 
@@ -1051,8 +1072,8 @@ comment on column md_order_status.status_description is 'Описание ста
 
 create table "order" (
 	order_id bigint generated always as identity primary key,
-	cart_id bigint references cart(cart_id),
-	md_delivery_type_id smallint references md_delivery_type(md_delivery_type_id),
+	cart_id bigint not null references cart(cart_id),
+	md_delivery_type_id smallint not null references md_delivery_type(md_delivery_type_id),
 	created_at_dtm timestamp not null default current_timestamp,
 	first_name varchar(50) not null check (length(first_name) >= 2),
 	last_name varchar(50),
@@ -1101,18 +1122,6 @@ insert into "order" (
         null,
         null,
         9990
-    ),
-	(
-        null,
-        1,
-        '2025-06-15'::timestamp,
-        'Жэка',
-        null,
-        'Питер',
-        '+74912245077',
-        null,
-        null,
-        9990
     );
 
 comment on table "order" is 'Таблица с заказами клиентов';
@@ -1132,7 +1141,7 @@ comment on column "order".total_price is 'Общая сумма по заказ�
 
 create table order_status_log (
 	order_status_log_id bigint generated always as identity primary key,
-	order_id bigint references "order"(order_id),
+	order_id bigint not null references "order"(order_id),
 	updated_at_dtm timestamp not null default current_timestamp,
 	md_order_status_id smallint not null references md_order_status(md_order_status_id) default 5
 );
