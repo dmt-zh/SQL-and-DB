@@ -34,7 +34,7 @@ create table static_page (
 	created_at_dtm timestamp default current_timestamp not null,
 	updated_at_dtm timestamp default current_timestamp not null,
 	is_draft bool not null default false,
-	url varchar(200)
+	url varchar(200) not null
 );
 
 insert into static_page (title, content, url) values 
@@ -46,7 +46,12 @@ insert into static_page (title, content, url) values
 	(
 		'Категория часов',
 		'Все часы поставляются с паспортами ОАО «Минский часовой завод», содержащими дату сборки часов и подтверждающими заводскую гарантию.',
-		null
+		'https://luch-watches.com/7-muzhskie-chasy'
+	),
+	(
+		'Категория часов',
+		'Все часы поставляются с паспортами ОАО «Минский часовой завод», содержащими дату сборки часов и подтверждающими заводскую гарантию.',
+		'https://luch-watches.com/8-zhenskie-chasy'
 	),
 	(
 		'Контактная информация',
@@ -100,7 +105,7 @@ create table category (
 
 insert into category (category_name, category_description, parent_category_id, static_page_id) values 
 	('Мужские часы', null, null, 2),
-	('Женские часы', null, null, 2),
+	('Женские часы', null, null, 3),
 	('Детские часы', null, null, null),
 	('Настольные часы', null, null, null),
 	('Ремни для часов Луч', null, null, null),
@@ -324,7 +329,7 @@ comment on column md_material_type.material_name is 'Название матер
 
 create table product (
 	product_id bigint generated always as identity primary key,
-	article varchar(150),
+	article varchar(150) unique,
 	name varchar(300) not null check (length(name) >= 4),
 	price numeric not null check (price > 0),
 	available_quantity int not null check (available_quantity >= 0)
@@ -465,7 +470,6 @@ create table watch (
 	calendar bool not null default false,
 	waterproof bool not null default false,
 	precious_metals bool not null default false,
-	icon_link varchar(300),
 	body_diameter numeric check (body_diameter > 0) default null,
 	in_stock bool not null default false
 );
@@ -473,7 +477,7 @@ create table watch (
 insert into watch (
 	product_id, md_watch_type_id, md_mechanism_type_id, md_glass_type_id, md_dial_type_id, md_body_shape_id,
 	md_strap_type_id, md_coverage_type_id, md_material_type_id, auto_winding, calendar, waterproof, precious_metals,
-	icon_link, body_diameter, in_stock) values 
+	body_diameter, in_stock) values 
 	(
 		1, --product_id
 		4, --watch_type_id (мужские)
@@ -488,7 +492,6 @@ insert into watch (
 		false, --calendar
 		true, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/5915-large_default/model-77471760.jpg', --icon_link
 		37.6, --body_diameter
 		true --in_stock
 	),
@@ -506,7 +509,6 @@ insert into watch (
 		false, --calendar
 		true, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/4228-large_default/chasy-luch-377477761.jpg', --icon_link
 		37.6, --body_diameter
 		true --in_stock
 	),
@@ -524,7 +526,6 @@ insert into watch (
 		false, --calendar
 		true, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/6144-large_default/chasy-luch-272081646.jpg', --icon_link
 		40.4, --body_diameter
 		true --in_stock
 	),
@@ -542,7 +543,6 @@ insert into watch (
 		false, --calendar
 		true, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/6144-large_default/chasy-luch-272081646.jpg', --icon_link
 		37.6, --body_diameter
 		true --in_stock
 	),
@@ -560,7 +560,6 @@ insert into watch (
 		true, --calendar
 		true, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/2681-large_default/chasy-luch-740280594.jpg', --icon_link
 		null, --body_diameter
 		true --in_stock
 	),
@@ -578,7 +577,6 @@ insert into watch (
 		false, --calendar
 		false, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/5147-large_default/chasy-luch-71650809.jpg', --icon_link
 		37.6, --body_diameter
 		true --in_stock
 	),
@@ -596,7 +594,6 @@ insert into watch (
 		false, --calendar
 		false, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/130-large_default/model-38991188.jpg', --icon_link
 		null, --body_diameter
 		false --in_stock
 	),	
@@ -614,7 +611,6 @@ insert into watch (
 		false, --calendar
 		false, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/2053-large_default/model-375231288', --icon_link
 		null, --body_diameter
 		true --in_stock
 	),	
@@ -632,7 +628,6 @@ insert into watch (
 		false, --calendar
 		false, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/3873-large_default/chasy-luch-8319631.jpg', --icon_link
 		null, --body_diameter
 		true --in_stock
 	),	
@@ -650,7 +645,6 @@ insert into watch (
 		false, --calendar
 		true, --waterproof
 		true, --precious_metals
-		'https://luch-watches.com/3707-large_default/chasy-luch-temper-378558507.jpg', --icon_link
 		31, --body_diameter
 		true --in_stock
 	),	
@@ -668,7 +662,6 @@ insert into watch (
 		false, --calendar
 		false, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/4359-large_default/model-8329632.jpg', --icon_link
 		null, --body_diameter
 		true --in_stock
 	),	
@@ -686,7 +679,6 @@ insert into watch (
 		false, --calendar
 		true, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/5518-large_default/chasy-luch-71650809.jpg', --icon_link
 		37.6, --body_diameter
 		true --in_stock
 	),	
@@ -704,7 +696,6 @@ insert into watch (
 		false, --calendar
 		false, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/4921-large_default/chasy-luch-73711355.jpgg', --icon_link
 		null, --body_diameter
 		true --in_stock
 	),	
@@ -722,7 +713,6 @@ insert into watch (
 		false, --calendar
 		false, --waterproof
 		false, --precious_metals
-		'https://luch-watches.com/5050-large_default/chasy-luch-429807464.jpg', --icon_link
 		null, --body_diameter
 		true --in_stock
 	);
@@ -741,7 +731,6 @@ comment on column watch.auto_winding is 'Наличие функции авто�
 comment on column watch.calendar is 'Наличие в часах календаря';
 comment on column watch.waterproof is 'Наличие защиты от влаги';
 comment on column watch.precious_metals is 'Содержание в часах драг. металов';
-comment on column watch.icon_link is 'Ссылка на картинку часов';
 comment on column watch.body_diameter is 'Диаметр корпуса часов';
 comment on column watch.in_stock is 'Наличие часов на складе';
 
@@ -750,7 +739,8 @@ comment on column watch.in_stock is 'Наличие часов на складе
 create table photo_link (
 	photo_link_id bigint generated always as identity primary key,
 	product_id bigint not null references product(product_id),
-	link varchar(300) not null
+	link varchar(300) not null,
+	is_main bool not null default false 
 );
 
 insert into photo_link (product_id, link) values 
@@ -777,6 +767,7 @@ comment on table photo_link is 'Таблица с сылками на изобр
 comment on column photo_link.photo_link_id is 'Уникальный идентификатор ссылок';
 comment on column photo_link.product_id is 'Внешний ключ на уникальный идентификатор товара';
 comment on column photo_link.link is 'Ссылка на изображение товара';
+comment on column photo_link.is_main is 'Является ли изображение основым для отображения товара';
 
 --###########################################################################
 
@@ -896,40 +887,34 @@ comment on column watch_to_category.category_id is 'Внешний ключ на
 create table accessory (
 	product_id bigint not null references product(product_id) primary key,
 	md_material_type_id smallint references md_material_type(md_material_type_id),
-	icon_link varchar(300),
 	in_stock bool not null default false
 );
 
-insert into accessory (product_id, md_material_type_id, icon_link, in_stock) values 
+insert into accessory (product_id, md_material_type_id, in_stock) values 
 	(
 		15, --product_id
 		2, --material_type_id (натуральная кожа)
-		'https://luch-watches.com/5773-large_default/remen-luch-chyornyj-20mm.jpg', --icon_link
 		true --in_stock
 	),
 	(
 		16, --product_id
 		2, --material_type_id (натуральная кожа)
-		'https://luch-watches.com/4705-large_default/remen-luch-chyornyj-20mm.jpg', --icon_link
 		true --in_stock
 	),
 	(
 		17, --product_id
 		1, --material_type_id (нержавеющая сталь)
-		'https://luch-watches.com/5927-large_default/braslet-dlya-chasov-luch-888201.jpg', --icon_link
 		true --in_stock
 	),
 	(
 		18, --product_id
 		null, --material_type_id
-		'https://luch-watches.com/3171-luch_large_for_product_page/chernyj-remen-20mm-nejlon.jpg', --icon_link
 		true --in_stock
 	);
 
 comment on table accessory is 'Таблица с ремешками для часов';
 comment on column accessory.product_id is 'Уникальный идентификатор ремешка';
 comment on column accessory.md_material_type_id is 'Идентификатор типа материала ремешка';
-comment on column accessory.icon_link is 'Ссылка на картинку ремешка';
 comment on column accessory.in_stock is 'Наличие ремешка на складе';
 
 --###########################################################################
@@ -983,7 +968,7 @@ comment on column accessory_to_category.category_id is 'Внешний ключ 
 
 create table cart (
 	cart_id bigint generated always as identity primary key,
-	user_cookies_hash varchar(64) not null check(length(user_cookies_hash) = 64)
+	user_cookies_hash varchar(64) not null check(length(user_cookies_hash) = 64) unique
 );
 
 insert into cart (user_cookies_hash) values
@@ -1161,3 +1146,4 @@ comment on column order_status_log.updated_at_dtm is 'Дата изменени�
 comment on column order_status_log.md_order_status_id is 'Внешний ключ на идентификатор статуса заказа';
 
 --###########################################################################
+	
